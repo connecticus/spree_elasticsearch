@@ -13,17 +13,25 @@ module Spree
 
       indexes :description, analyzer: 'snowball'
       indexes :available_on, type: 'date', format: 'dateOptionalTime'
+      indexes :discontinue_on, type: "date", format: "dateOptionalTime"
       indexes :price, type: 'double'
       indexes :sku, type: 'keyword', index: true
       indexes :taxon_ids, type: 'keyword', index: true
       indexes :properties, type: 'keyword', index: true
+      indexes :classifications, type: 'nested' do
+        indexes :taxon_id, type: 'integer'
+        indexes :position, type: 'integer'
+      end
     end
 
     def as_indexed_json(options={})
       result = as_json({
         methods: [:price, :sku],
-        only: [:available_on, :description, :name],
+        only: [:available_on, :discontinue_on, :description, :name],
         include: {
+          classifications: {
+            only: [:taxon_id, :position]
+          },
           variants: {
             only: [:sku],
             include: {
@@ -107,6 +115,8 @@ module Spree
           [ { 'price' => { order: 'asc' } }, { 'name.untouched' => { order: 'asc' } }, '_score' ]
         when 'price_desc'
           [ { 'price' => { order: 'desc' } }, { 'name.untouched' => { order: 'asc' } }, '_score' ]
+        when 'classification'
+          [ { 'classifications.position' => { mode: 'min', order: 'asc', nested_path: 'classifications' } } ]
         when 'score'
           [ '_score', { 'name.untouched' => { order: 'asc' } }, { price: { order: 'asc' } } ]
         else
@@ -135,6 +145,8 @@ module Spree
         and_filter << { terms: { taxon_ids: taxons } } unless taxons.empty?
         # only return products that are available
         and_filter << { range: { available_on: { lte: 'now' } } }
+        and_filter << { bool: { should: [{ bool: { must_not: { exists: { field: "discontinue_on" } } } }, { range: { discontinue_on: { gte: "now/1h" } } }] } }
+
         result[:query][:bool][:filter] = and_filter unless and_filter.empty?
 
         # add price filter outside the query because it should have no effect on facets

@@ -3,8 +3,9 @@ require 'byebug'
 
 module Spree
   describe Product do
-    let(:a_product) { create(:product) }
-    let(:another_product) { create(:product) }
+    let(:taxon) { create(:taxon) }
+    let(:a_product) { create(:product, taxons: [taxon]) }
+    let(:another_product) { create(:product, taxons: [taxon]) }
 
     before do
       # for clean testing, delete index, create new one and create/update mapping
@@ -92,6 +93,23 @@ module Spree
         it { expect(products.results.any?{ |product| product.name == another_product.name }).to be_truthy }
       end
 
+      context 'retrieves only available products' do
+        before do
+          a_product.name = "Discontinued Product"
+          a_product.discontinue_on = Time.now - 5.days
+          a_product.__elasticsearch__.index_document
+
+          another_product.name = "Available Product"
+          another_product.__elasticsearch__.index_document
+          Product.__elasticsearch__.refresh_index!
+        end
+
+        let(:products) { Product.__elasticsearch__.search(Spree::Product::ElasticsearchQuery.new) }
+
+        it { expect(products.results.total).to eq 1 }
+        it { expect(products.results.to_a[0].name).to eq another_product.name }
+      end
+
       context 'retrieves products default sorted on name' do
         before do
           a_product.name = 'Product 1'
@@ -106,6 +124,27 @@ module Spree
         it { expect(products.results.total).to eq 2 }
         it { expect(products.results.to_a[0].name).to eq a_product.name }
         it { expect(products.results.to_a[1].name).to eq another_product.name }
+      end
+
+      context 'retrieves products sorted by classifications' do
+        before do
+          a_product.name = 'Product 1'
+          another_product.name = 'Product 2'
+          another_product.classifications.first.insert_at(1) # Reorder positions
+          a_product.classifications.reload
+          another_product.classifications.reload
+          a_product.__elasticsearch__.index_document
+          another_product.__elasticsearch__.index_document
+          Product.__elasticsearch__.refresh_index!
+        end
+
+        let(:products) do
+          Product.__elasticsearch__.search(Spree::Product::ElasticsearchQuery.new(taxons: taxon.id, sorting: 'classification'))
+        end
+
+        it { expect(products.results.total).to eq 2 }
+        it { expect(products.results.to_a[0].name).to eq another_product.name }
+        it { expect(products.results.to_a[1].name).to eq a_product.name }
       end
 
       context 'filters products based on price' do
