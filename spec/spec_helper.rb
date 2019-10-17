@@ -30,7 +30,7 @@ require 'spree/testing_support/authorization_helpers'
 require 'spree/testing_support/url_helpers'
 
 # Requires factories defined in lib/spree_elasticsearch/factories.rb
-require 'spree_elasticsearch/factories'
+# require 'spree_elasticsearch/factories' 
 
 # Allow for indexing
 require 'product_helpers'

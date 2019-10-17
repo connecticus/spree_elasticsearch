@@ -15,7 +15,12 @@ To understand what is going on, you should first learn about Elasticsearch. Some
 Add spree_elasticsearch to your Gemfile:
 
 ```ruby
-gem 'spree_elasticsearch', github: 'javereec/spree_elasticsearch', branch: '3-0-stable'
+gem 'spree_elasticsearch', github: 'ronzalo/spree_elasticsearch', branch: 'master'
+```
+
+For Spree 4
+```ruby
+gem 'spree_elasticsearch', github: 'ronzalo/spree_elasticsearch', branch: '4-0-stable'
 ```
 
 Bundle your dependencies and run the installation generator:
