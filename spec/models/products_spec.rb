@@ -93,6 +93,23 @@ module Spree
         it { expect(products.results.any?{ |product| product.name == another_product.name }).to be_truthy }
       end
 
+      context 'retrieves only available products' do
+        before do
+          a_product.name = "Discontinued Product"
+          a_product.discontinue_on = Time.now - 5.days
+          a_product.__elasticsearch__.index_document
+
+          another_product.name = "Available Product"
+          another_product.__elasticsearch__.index_document
+          Product.__elasticsearch__.refresh_index!
+        end
+
+        let(:products) { Product.__elasticsearch__.search(Spree::Product::ElasticsearchQuery.new) }
+
+        it { expect(products.results.total).to eq 1 }
+        it { expect(products.results.to_a[0].name).to eq another_product.name }
+      end
+
       context 'retrieves products default sorted on name' do
         before do
           a_product.name = 'Product 1'
