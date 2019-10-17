@@ -1,5 +1,7 @@
 # Spree Elasticsearch
 
+[![Build Status](https://travis-ci.org/ronzalo/spree_elasticsearch.svg?branch=master)](https://travis-ci.org/ronzalo/spree_elasticsearch)
+
 This extension uses elasticsearch-ruby for integration of Elasticsearch with Spree. This is preconfigured for a certain use case, but by all means override where necessary.
 
 To understand what is going on, you should first learn about Elasticsearch. Some great resources:
