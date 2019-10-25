@@ -15,7 +15,7 @@ To understand what is going on, you should first learn about Elasticsearch. Some
 Add spree_elasticsearch to your Gemfile:
 
 ```ruby
-gem 'spree_elasticsearch', github: 'javereec/spree_elasticsearch', branch: '3-0-stable'
+gem 'spree_elasticsearch', github: 'ronzalo/spree_elasticsearch', branch: 'master'
 ```
 
 Bundle your dependencies and run the installation generator:
@@ -50,7 +50,7 @@ end
 
 ### Elasticsearch
 
-Elasticsearch is very easy to install. Get and unzip elasticsearch 1.x.x: http://www.elasticsearch.org/download
+Elasticsearch is very easy to install. Get and unzip elasticsearch 6.x.x: http://www.elasticsearch.org/download
 
 Start:
 
