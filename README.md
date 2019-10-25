@@ -1,5 +1,6 @@
 # Spree Elasticsearch
 
+[![CircleCI](https://circleci.com/gh/ronzalo/spree_elasticsearch/tree/circle-ci.svg?style=svg)](https://circleci.com/gh/ronzalo/spree_elasticsearch/tree/circle-ci)
 [![Build Status](https://travis-ci.org/ronzalo/spree_elasticsearch.svg?branch=master)](https://travis-ci.org/ronzalo/spree_elasticsearch)
 
 This extension uses elasticsearch-ruby for integration of Elasticsearch with Spree. This is preconfigured for a certain use case, but by all means override where necessary.
