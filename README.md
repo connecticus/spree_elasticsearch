@@ -1,5 +1,6 @@
 # Spree Elasticsearch
 
+[![CircleCI](https://circleci.com/gh/ronzalo/spree_elasticsearch/tree/4-0-stable.svg?style=svg)](https://circleci.com/gh/ronzalo/spree_elasticsearch/tree/4-0-stable)
 [![Build Status](https://travis-ci.org/ronzalo/spree_elasticsearch.svg?branch=master)](https://travis-ci.org/ronzalo/spree_elasticsearch)
 
 This extension uses elasticsearch-ruby for integration of Elasticsearch with Spree. This is preconfigured for a certain use case, but by all means override where necessary.
@@ -16,6 +17,11 @@ Add spree_elasticsearch to your Gemfile:
 
 ```ruby
 gem 'spree_elasticsearch', github: 'ronzalo/spree_elasticsearch', branch: 'master'
+```
+
+For Spree 4
+```ruby
+gem 'spree_elasticsearch', github: 'ronzalo/spree_elasticsearch', branch: '4-0-stable'
 ```
 
 Bundle your dependencies and run the installation generator:
