@@ -1,5 +1,4 @@
 module Spree::ProductDecorator
-  
   def self.prepended(base)
     base.include Elasticsearch::Model
 
@@ -108,6 +107,9 @@ module Spree::ProductDecorator
         end
       end
 
+      # Only sort by classification if taxon present
+      @sorting = nil if @sorting == "classification" and taxons.empty?
+
       sorting = case @sorting
                 when "name_asc"
                   [{ "name.untouched" => { order: "asc" } }, { price: { order: "asc" } }, "_score"]
@@ -118,7 +120,16 @@ module Spree::ProductDecorator
                 when "price_desc"
                   [{ "price" => { order: "desc" } }, { "name.untouched" => { order: "asc" } }, "_score"]
                 when "classification"
-                  [{ "classifications.position" => { mode: "min", order: "asc", nested_path: "classifications" } }]
+                  [{ "classifications.position" => {
+                    mode: "min",
+                    order: "asc",
+                    nested: {
+                      path: "classifications",
+                      filter: {
+                        term: { "classifications.taxon_id" => taxons.first },
+                      },
+                    },
+                  } }]
                 when "score"
                   ["_score", { "name.untouched" => { order: "asc" } }, { price: { order: "asc" } }]
                 else

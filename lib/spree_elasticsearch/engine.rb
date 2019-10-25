@@ -11,6 +11,12 @@ module SpreeElasticsearch
       g.test_framework :rspec
     end
 
+    config.before_initialize do
+      ActiveSupport.on_load :action_controller do
+        ActionController::Base.send :helper, SpreeElasticsearch::FilterHelper
+      end
+    end
+
     initializer "spree.assets.precompile", group: :all do |app|
       app.config.assets.precompile += %w[
         sprite-skin-flat.png
