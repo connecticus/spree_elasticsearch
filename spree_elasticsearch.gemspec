@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.version = "4.0.0"
   s.summary = "Add searching capabilities via Elasticsearch"
   s.description = s.summary
-  s.required_ruby_version = ">= 2.5.0"
+  s.required_ruby_version = ">= 2.4.0"
 
   s.author = "Jan Vereecken"
   s.email = "janvereecken@clubit.be"
@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
   s.add_dependency "elasticsearch-rails"
   s.add_dependency "settingslogic"
   s.add_dependency "virtus"
-  s.add_dependency "spree_core", ">= 4.0.0", "< 5.0"
+  s.add_dependency "spree_core", ">= 3.0.0", "< 5.0"
 
   s.add_development_dependency "elasticsearch-extensions"
   s.add_development_dependency "capybara", "~> 2.1"
